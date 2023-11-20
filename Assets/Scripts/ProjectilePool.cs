@@ -8,7 +8,7 @@ public class ProjectilePool : MonoBehaviour
 
     [SerializeField] GameObject projectilePrefab;
 
-    private List<Projectile> projectilesInPool;
+    private List<GunProjectile> projectilesInPool;
 
     public static ProjectilePool Instance;
 
@@ -21,9 +21,9 @@ public class ProjectilePool : MonoBehaviour
         InitializePool();
     }
 
-    public Projectile Instantiate (Vector3 position, Quaternion rotation)
+    public GunProjectile Instantiate (Vector3 position, Quaternion rotation)
     {
-        Projectile _projectile = projectilesInPool[0];
+        GunProjectile _projectile = projectilesInPool[0];
         _projectile.transform.position = position;
         _projectile.transform.rotation = rotation;
         projectilesInPool.Remove(_projectile);
@@ -31,7 +31,7 @@ public class ProjectilePool : MonoBehaviour
         return _projectile;
     }
     
-    public void ReturnToPool (Projectile _projectile)
+    public void ReturnToPool (GunProjectile _projectile)
     {
         _projectile.transform.position = transform.position;
         projectilesInPool.Add(_projectile);
@@ -39,10 +39,12 @@ public class ProjectilePool : MonoBehaviour
 
     void InitializePool()
     {
+        projectilesInPool = new List<GunProjectile>();
+
         for (int i = 0; i < poolSize; i++)
         {
             GameObject _projectile = Instantiate(projectilePrefab, transform.position, transform.rotation);
-            projectilesInPool.Add(_projectile.GetComponent<Projectile>());
+            projectilesInPool.Add(_projectile.GetComponent<GunProjectile>());
         }
     }
 }

@@ -1,36 +1,47 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Android.Gradle.Manifest;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 
-
+[RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private float Speed;
+    CharacterController characterController;
+
+    private Vector3 moveDirection = Vector3.zero;
+
+    public float speed = 6.0f;
+    public float gravity = 20.0f;
 
     // Use this for initialization
     void Start()
     {
-
+        characterController = GetComponent<CharacterController>();
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        HandleInput();
+        Locomotion();
         mouseFollow();
         ShootInput();
     }
 
-    void HandleInput()
+    void Locomotion()
     {
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
+        if (characterController.isGrounded)//When grounded, set the y-axis to zero(to ignore it)
+        {
+            moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
+            
+            moveDirection *= speed;
 
-        Vector3 movementspeed = new Vector3(horizontal, 0, vertical);
-        transform.Translate(Speed * movementspeed * Time.deltaTime, Space.World);
+        }
+
+        moveDirection.y -= gravity * Time.deltaTime;
+        characterController.Move(moveDirection * Time.deltaTime);
     }
 
     void mouseFollow()

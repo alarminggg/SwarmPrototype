@@ -14,12 +14,7 @@ public class PlayerGun : MonoBehaviour
     {
         Instance = GetComponent<PlayerGun>();
     }
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    
     public void Shoot()
     {
         if(lastTimeShot + firingSpeed <= Time.time)

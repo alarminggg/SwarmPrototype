@@ -1,26 +1,32 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyHitManager : MonoBehaviour
 {
-    [SerializeField]
-    float hitPoints = 25f;
+    public int maxhealth = 50;
+    public int currentHealth;
 
-    void Hit(float rawDamage)
+    public event Action OnEnemyDeath;
+    void Start()
     {
-        hitPoints -= rawDamage;
-        Debug.Log("Enemy Hit: " + hitPoints.ToString());
-
-
-        if (hitPoints <= 0)
-        {
-            Invoke("SelfTerminate", 0f);
-        }
+        currentHealth = maxhealth;
     }
 
-    void SelfTerminate()
+    void Update()
     {
-        Destroy(gameObject);
+        
+    }
+
+    public void TakeDamage(int amount)
+    {
+        currentHealth -= amount;
+
+        if (currentHealth < 0)
+        {
+            OnEnemyDeath?.Invoke();
+            Destroy(gameObject);
+        }
     }
 }

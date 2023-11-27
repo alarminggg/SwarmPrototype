@@ -9,8 +9,6 @@ public class GunProjectile : MonoBehaviour
     [SerializeField] private float projectileSpeed;
     [SerializeField] private float maxProjectileDistance;
 
-    [SerializeField] float rawDamage = 10f;
-
     private bool shouldMove = false;
 
     void Start()

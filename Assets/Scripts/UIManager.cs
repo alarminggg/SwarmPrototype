@@ -14,7 +14,6 @@ public class UIManager : MonoBehaviour
     }
     public void ActivateEndGame()
     {
-        
         gameOverPanel.SetActive(true);
         Cursor.visible = true;
     }

@@ -4,25 +4,75 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    public GameObject Enemy;
-    public Transform[] EnemySpawnPoints;
-    public int numberOfEnemiesToSpawn = 10;
+    [SerializeField] private float countdown;
+    [SerializeField] private GameObject spawnPoint;
 
-    void Start()
-    {
-        SpawnEnemies();
-    }
+    public Wave[] waves;
+    public int currentWaveIndex = 0;
 
-    void SpawnEnemies()
+    private bool readyToCountDown;
+    private void Start()
     {
-        for (int i = 0; i < numberOfEnemiesToSpawn; i++)
+        readyToCountDown = true;
+
+        for (int i = 0; i < waves.Length; i++)
         {
-            // Randomly select a spawn point
-            int randomSpawnIndex = Random.Range(0, EnemySpawnPoints.Length);
-            Transform spawnPoint = EnemySpawnPoints[randomSpawnIndex];
+            waves[i].enemiesLeft = waves[i].enemies.Length;
+        }
+    }
+    private void Update()
+    {
+        if (currentWaveIndex >= waves.Length)
+        {
+            Debug.Log("You survived every wave!");
+            return;
+        }
 
-            // Instantiate the enemy at the chosen spawn point
-            Instantiate(Enemy, spawnPoint.position, spawnPoint.rotation);
+        if (readyToCountDown == true)
+        {
+            countdown -= Time.deltaTime;
+        }
+
+        if (countdown <= 0)
+        {
+            readyToCountDown = false;
+
+            countdown = waves[currentWaveIndex].timeToNextWave;
+
+            StartCoroutine(SpawnWave());
+        }
+
+        if (waves[currentWaveIndex].enemiesLeft == 0)
+        {
+            readyToCountDown = true;
+
+            currentWaveIndex++;
+        }
+    }
+    private IEnumerator SpawnWave()
+    {
+        if (currentWaveIndex < waves.Length)
+        {
+            for (int i = 0; i < waves[currentWaveIndex].enemies.Length; i++)
+            {
+                EnemyChase enemy = Instantiate(waves[currentWaveIndex].enemies[i], spawnPoint.transform);
+
+                enemy.transform.SetParent(spawnPoint.transform);
+
+                yield return new WaitForSeconds(waves[currentWaveIndex].timeToNextEnemy);
+            }
         }
     }
 }
+
+[System.Serializable]
+public class Wave
+{
+    public EnemyChase[] enemies;
+    public float timeToNextEnemy;
+    public float timeToNextWave;
+
+    [HideInInspector] public int enemiesLeft;
+}
+
+

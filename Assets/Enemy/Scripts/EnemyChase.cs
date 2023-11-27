@@ -8,9 +8,12 @@ public class EnemyChase : MonoBehaviour
     public Transform targetObject;
     public NavMeshAgent enemy;
 
-    void Start()
+
+    private EnemySpawner enemySpawner;
+
+    private void Start()
     {
-        
+        enemySpawner = GetComponentInParent<EnemySpawner>();
     }
 
     // Update is called once per frame

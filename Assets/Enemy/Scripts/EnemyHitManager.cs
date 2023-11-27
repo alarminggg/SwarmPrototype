@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class EnemyHitManager : MonoBehaviour
 {
-    public int maxhealth = 50;
-    public int currentHealth;
+    [SerializeField] float maxhealth = 50f;
+    float currentHealth;
 
-    public event Action OnEnemyDeath;
+
     void Start()
     {
         currentHealth = maxhealth;
@@ -19,13 +19,12 @@ public class EnemyHitManager : MonoBehaviour
         
     }
 
-    public void TakeDamage(int amount)
+    public void TakeDamage(float enemyDamage)
     {
-        currentHealth -= amount;
+        currentHealth -= enemyDamage;
 
         if (currentHealth < 0)
         {
-            OnEnemyDeath?.Invoke();
             Destroy(gameObject);
         }
     }

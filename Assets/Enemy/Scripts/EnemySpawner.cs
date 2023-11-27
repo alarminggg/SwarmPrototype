@@ -6,40 +6,23 @@ public class EnemySpawner : MonoBehaviour
 {
     public GameObject Enemy;
     public Transform[] EnemySpawnPoints;
-    public float spawnInterval = 2f;
-    public int initialSpawnCount = 10;
-    public float enemiesIncreaseFactor = 1.5f;
-
-    private int currentSpawnCount;
-    private int totalSpawnedEnemies;
-    private int deadEnemies;
+    public int numberOfEnemiesToSpawn = 10;
 
     void Start()
     {
-        StartNewSpawn();
+        SpawnEnemies();
     }
 
-    void StartNewSpawn()
+    void SpawnEnemies()
     {
-        currentSpawnCount = Mathf.RoundToInt(initialSpawnCount * Mathf.Pow(enemiesIncreaseFactor, totalSpawnedEnemies));
-        deadEnemies = 0;
-
-        // Subscribe to the OnEnemyDeath event
-        foreach (var spawnPoint in EnemySpawnPoints)
+        for (int i = 0; i < numberOfEnemiesToSpawn; i++)
         {
-            GameObject enemy = Instantiate(Enemy, spawnPoint.position, spawnPoint.rotation);
-            EnemyHitManager enemyHitManager = enemy.GetComponent<EnemyHitManager>();
-            enemyHitManager.OnEnemyDeath += OnEnemyDeath;
-        }
-    }
+            // Randomly select a spawn point
+            int randomSpawnIndex = Random.Range(0, EnemySpawnPoints.Length);
+            Transform spawnPoint = EnemySpawnPoints[randomSpawnIndex];
 
-    void OnEnemyDeath()
-    {
-        deadEnemies++;
-
-        if (deadEnemies >= currentSpawnCount)
-        {
-            StartNewSpawn();
+            // Instantiate the enemy at the chosen spawn point
+            Instantiate(Enemy, spawnPoint.position, spawnPoint.rotation);
         }
     }
 }

@@ -4,12 +4,19 @@ using UnityEngine;
 
 public class BulletDamage : MonoBehaviour
 {
-    
+    [SerializeField]
+    float rawDamage = 25f;
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.name == "Enemy")
         {
-            other.gameObject.GetComponent<EnemyHitManager>().TakeDamage(25);
+            Debug.Log("Enemy Hit!");
+            EnemyHitManager enemyHitManager = other.gameObject.GetComponent<EnemyHitManager>();
+            if (enemyHitManager != null)
+            {
+                enemyHitManager.TakeDamage(rawDamage);
+            }
         }
     }
 }
